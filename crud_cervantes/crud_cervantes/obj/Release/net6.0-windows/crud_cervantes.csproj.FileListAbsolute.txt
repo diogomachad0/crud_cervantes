@@ -1,0 +1,7 @@
+C:\Users\diogo\source\repos\crud_cervantes\crud_cervantes\obj\Release\net6.0-windows\crud_cervantes.csproj.AssemblyReference.cache
+C:\Users\diogo\source\repos\crud_cervantes\crud_cervantes\obj\Release\net6.0-windows\crud_cervantes.Form1.resources
+C:\Users\diogo\source\repos\crud_cervantes\crud_cervantes\obj\Release\net6.0-windows\crud_cervantes.csproj.GenerateResource.cache
+C:\Users\diogo\source\repos\crud_cervantes\crud_cervantes\obj\Release\net6.0-windows\crud_cervantes.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\diogo\source\repos\crud_cervantes\crud_cervantes\obj\Release\net6.0-windows\crud_cervantes.AssemblyInfoInputs.cache
+C:\Users\diogo\source\repos\crud_cervantes\crud_cervantes\obj\Release\net6.0-windows\crud_cervantes.AssemblyInfo.cs
+C:\Users\diogo\source\repos\crud_cervantes\crud_cervantes\obj\Release\net6.0-windows\crud_cervantes.csproj.CoreCompileInputs.cache

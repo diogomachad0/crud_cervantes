@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "crud_cervantes": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\diogo\\source\\repos\\crud_cervantes\\crud_cervantes"
+    }
+  }
+}
