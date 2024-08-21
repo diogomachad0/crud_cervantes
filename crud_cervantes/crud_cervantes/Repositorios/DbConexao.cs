@@ -1,7 +1,6 @@
 ﻿using Npgsql;
 using System;
 using System.Data;
-using System.Windows.Forms;
 
 namespace crud_cervantes.Repositorios
 {
@@ -16,31 +15,11 @@ namespace crud_cervantes.Repositorios
 
         public IDbConnection GetConnection()
         {
-            while (true)
+            if (connection.State != ConnectionState.Open)
             {
-                try
-                {
-                    if (connection.State != ConnectionState.Open)
-                    {
-                        connection.Open();
-                    }
-                    return connection;
-                }
-                catch (NpgsqlException ex)
-                {
-                    DialogResult result = MessageBox.Show(
-                        "Erro ao conectar ao banco de dados. Verifique a configuração da rede e tente novamente.\n\n" + ex.Message,
-                        "Erro de Conexão",
-                        MessageBoxButtons.RetryCancel,
-                        MessageBoxIcon.Error
-                    );
-
-                    if (result == DialogResult.Cancel)
-                    {
-                        throw new Exception("Falha ao conectar ao banco de dados.", ex);
-                    }
-                }
+                connection.Open();
             }
+            return connection;
         }
 
         public void Dispose()

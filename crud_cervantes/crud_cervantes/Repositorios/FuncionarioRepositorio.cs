@@ -55,19 +55,43 @@ namespace crud_cervantes.Repositorios
             }
         }
 
-
         public void Update(Funcionario funcionario)
         {
-            using NpgsqlConnection conexao = (NpgsqlConnection)new DbConexao().GetConnection();
-            conexao.Execute("UPDATE FUNCIONARIO SET NOME = @nome, TELEFONE = @telefone WHERE ID = @id;",
-                new
-                {
-                    nome = funcionario.Nome,
-                    telefone = funcionario.Telefone,
-                    id = funcionario.Id
-                });
+            bool sucesso = false;
 
-            RegistrarLog("Update", funcionario.Id);
+            while (!sucesso)
+            {
+                try
+                {
+                    using NpgsqlConnection conexao = (NpgsqlConnection)new DbConexao().GetConnection();
+                    conexao.Execute("UPDATE FUNCIONARIO SET NOME = @nome, TELEFONE = @telefone WHERE ID = @id;",
+                        new
+                        {
+                            nome = funcionario.Nome,
+                            telefone = funcionario.Telefone,
+                            id = funcionario.Id
+                        });
+
+                    RegistrarLog("Update", funcionario.Id);
+                    sucesso = true;
+                }
+                catch (Npgsql.NpgsqlException ex)
+                {
+                    DialogResult result = MessageBox.Show("Erro ao conectar com o banco de dados. Deseja tentar novamente?",
+                        "Erro de Conexão", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+
+                    if (result == DialogResult.Cancel)
+                    {
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ocorreu um erro: {ex.Message}",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                }
+            }
         }
 
         public void Delete(int id)
@@ -77,21 +101,27 @@ namespace crud_cervantes.Repositorios
 
             try
             {
-                conexao.Execute(
-                    "INSERT INTO OPERACAO_LOG (TIPO_OPERACAO) VALUES(@tipoOperacao);",
-                    new { tipoOperacao = "Delete", funcionarioId = id },
+                conexao.Execute("INSERT INTO OPERACAO_LOG (TIPO_OPERACAO) VALUES(@tipoOperacao);",
+                    new { tipoOperacao = "Delete" },
                     transaction);
-                conexao.Execute(
-                    "DELETE FROM FUNCIONARIO WHERE ID = @id;",
+
+                conexao.Execute("DELETE FROM FUNCIONARIO WHERE ID = @id;",
                     new { id },
                     transaction);
 
                 transaction.Commit();
             }
+            catch (Npgsql.NpgsqlException ex)
+            {
+                transaction.Rollback();
+                MessageBox.Show("Erro ao conectar com o banco de dados. Verifique sua conexão e tente novamente.",
+                    "Erro de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (Exception ex)
             {
                 transaction.Rollback();
-                throw new Exception($"Erro ao remover o funcionário: {ex.Message}", ex);
+                MessageBox.Show($"Erro ao remover o funcionário: {ex.Message}",
+                    "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

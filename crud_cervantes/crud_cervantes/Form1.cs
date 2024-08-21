@@ -1,4 +1,5 @@
 using crud_cervantes.Repositorios;
+using Npgsql;
 using System.Windows.Forms;
 
 namespace crud_cervantes
@@ -112,8 +113,29 @@ namespace crud_cervantes
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var funcionarioRepositorio = new FuncionarioRepositorio();
-            BuscarTodosFuncionarios(funcionarioRepositorio);
+            try
+            {
+                var funcionarioRepositorio = new FuncionarioRepositorio();
+                BuscarTodosFuncionarios(funcionarioRepositorio);
+            }
+            catch (NpgsqlException ex)
+            {
+                DialogResult result = MessageBox.Show(
+                    "Erro ao conectar ao banco de dados. Verifique a configuração da rede e tente novamente.\n\n" + ex.Message,
+                    "Erro de Conexão",
+                    MessageBoxButtons.RetryCancel,
+                    MessageBoxIcon.Error
+                );
+
+                if (result == DialogResult.Cancel)
+                {
+                    this.Close();
+                }
+                else
+                {
+                    Form1_Load(sender, e);
+                }
+            }
         }
 
         private void dgFuncionario_CellClick(object sender, DataGridViewCellEventArgs e)
